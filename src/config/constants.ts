@@ -7,6 +7,14 @@ export const PRODUCT_CATEGORIES = ['notebooks', 'celulares', 'perifericos', 'acc
 // estados posibles de una orden (coinciden con el modelo de datos en Firestore)
 export const ORDER_STATUSES = ['pending', 'processing', 'completed', 'cancelled'] as const
 
+// nombres de las colecciones de Firestore — un typo acá rompería todo, mejor una sola fuente
+export const COLLECTIONS = {
+  users: 'users',
+  products: 'products',
+  carts: 'carts',
+  orders: 'orders',
+} as const
+
 // rutas de la app: única fuente de verdad para router, links y redirecciones
 export const ROUTES = {
   home: '/',
