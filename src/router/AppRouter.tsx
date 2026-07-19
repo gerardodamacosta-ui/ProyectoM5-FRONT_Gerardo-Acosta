@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { ROUTES } from '../config/constants'
+import { ROUTES } from '@/config/constants'
 
 // placeholder temporal del home hasta que exista el catálogo real
 function HomePlaceholder() {
