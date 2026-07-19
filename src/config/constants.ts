@@ -2,20 +2,10 @@
 
 // categorías de producto: conjunto chico y estable, NO es colección de Firestore
 // (placeholder inicial, se ajusta cuando definamos el catálogo real)
-export const PRODUCT_CATEGORIES = [
-  'notebooks',
-  'celulares',
-  'perifericos',
-  'accesorios',
-] as const
+export const PRODUCT_CATEGORIES = ['notebooks', 'celulares', 'perifericos', 'accesorios'] as const
 
 // estados posibles de una orden (coinciden con el modelo de datos en Firestore)
-export const ORDER_STATUSES = [
-  'pending',
-  'processing',
-  'completed',
-  'cancelled',
-] as const
+export const ORDER_STATUSES = ['pending', 'processing', 'completed', 'cancelled'] as const
 
 // rutas de la app: única fuente de verdad para router, links y redirecciones
 export const ROUTES = {
