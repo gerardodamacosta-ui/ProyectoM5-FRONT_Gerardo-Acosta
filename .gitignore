@@ -15,6 +15,9 @@ dist-ssr
 # variables de entorno (valores reales solo locales, nunca al repo)
 .env
 
+# credencial del Admin SDK de Firebase — acceso total al proyecto, nunca al repo
+serviceAccountKey.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
