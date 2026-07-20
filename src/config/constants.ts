@@ -1,8 +1,14 @@
 // constantes centralizadas de la app — nada de hardcode suelto en componentes
 
 // categorías de producto: conjunto chico y estable, NO es colección de Firestore
-// (placeholder inicial, se ajusta cuando definamos el catálogo real)
-export const PRODUCT_CATEGORIES = ['notebooks', 'celulares', 'perifericos', 'accesorios'] as const
+export const PRODUCT_CATEGORIES = [
+  'Notebooks',
+  'Celulares',
+  'Accesorios',
+  'Audio',
+  'Gaming',
+  'Componentes',
+] as const
 
 // estados posibles de una orden (coinciden con el modelo de datos en Firestore)
 export const ORDER_STATUSES = ['pending', 'processing', 'completed', 'cancelled'] as const
