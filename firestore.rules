@@ -1,0 +1,23 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // perfil de usuario en users/{userId} — cada uno accede solo al suyo
+    // create separado de update para que role sea INMUTABLE desde el cliente:
+    // - create: solo el propio uid y siempre con role 'customer' (default de todo registro)
+    // - update: solo el propio uid y sin poder cambiar role (impide auto-escalada a admin)
+    // el ascenso a admin se hace a mano en la consola de Firebase, que saltea estas reglas
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create: if request.auth != null
+                    && request.auth.uid == userId
+                    && request.resource.data.role == 'customer';
+      allow update: if request.auth != null
+                    && request.auth.uid == userId
+                    && request.resource.data.role == resource.data.role;
+    }
+
+    // products, carts y orders: sin reglas todavía = acceso denegado por defecto
+    // se agregan cuando llegue cada módulo; las de admin van a chequear el role de
+    // users/{uid}, que gracias a la inmutabilidad de arriba es confiable
+  }
+}
