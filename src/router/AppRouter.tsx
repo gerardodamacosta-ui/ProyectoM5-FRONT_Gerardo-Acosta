@@ -5,6 +5,8 @@ import { LoginPage } from '@/modules/auth/pages/LoginPage'
 import { RegisterPage } from '@/modules/auth/pages/RegisterPage'
 import { CartPage } from '@/modules/cart/pages/CartPage'
 import { CheckoutPage } from '@/modules/checkout/pages/CheckoutPage'
+import { OrderDetailPage } from '@/modules/orders/pages/OrderDetailPage'
+import { OrdersPage } from '@/modules/orders/pages/OrdersPage'
 import { CatalogPage } from '@/modules/products/pages/CatalogPage'
 import { ProductDetailPage } from '@/modules/products/pages/ProductDetailPage'
 
@@ -48,6 +50,23 @@ export function AppRouter() {
           element={
             <ProtectedRoute allowedRoles={['customer', 'admin']}>
               <CheckoutPage />
+            </ProtectedRoute>
+          }
+        />
+        {/* historial y detalle de órdenes: requiere sesión, cualquier rol */}
+        <Route
+          path={ROUTES.orders}
+          element={
+            <ProtectedRoute allowedRoles={['customer', 'admin']}>
+              <OrdersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.orderDetail}
+          element={
+            <ProtectedRoute allowedRoles={['customer', 'admin']}>
+              <OrderDetailPage />
             </ProtectedRoute>
           }
         />
