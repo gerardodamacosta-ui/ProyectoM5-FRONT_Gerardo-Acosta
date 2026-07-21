@@ -1,7 +1,9 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { ROUTES } from '@/config/constants'
+import { ProtectedRoute } from '@/modules/auth/components/ProtectedRoute'
 import { LoginPage } from '@/modules/auth/pages/LoginPage'
 import { RegisterPage } from '@/modules/auth/pages/RegisterPage'
+import { CartPage } from '@/modules/cart/pages/CartPage'
 import { CatalogPage } from '@/modules/products/pages/CatalogPage'
 import { ProductDetailPage } from '@/modules/products/pages/ProductDetailPage'
 
@@ -30,6 +32,15 @@ export function AppRouter() {
         {/* catálogo público: navegable sin login, ver alcance del Hito 3 */}
         <Route path={ROUTES.catalog} element={<CatalogPage />} />
         <Route path={ROUTES.productDetail} element={<ProductDetailPage />} />
+        {/* carrito: requiere sesión, cualquier rol (customer o admin) */}
+        <Route
+          path={ROUTES.cart}
+          element={
+            <ProtectedRoute allowedRoles={['customer', 'admin']}>
+              <CartPage />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   )
