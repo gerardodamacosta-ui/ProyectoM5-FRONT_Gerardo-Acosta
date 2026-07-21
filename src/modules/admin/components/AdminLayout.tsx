@@ -9,8 +9,11 @@ export function AdminLayout() {
   const navigate = useNavigate()
 
   const handleLogout = async () => {
-    await logout()
+    // se navega ANTES de deslogear: si se hiciera al revés, ProtectedRoute (montado en /admin
+    // en este instante) reacciona al user->null y redirige a /login antes de que este navigate
+    // llegue a ejecutarse — cualquier logout dentro de una ruta protegida debe seguir este orden
     navigate(ROUTES.home)
+    await logout()
   }
 
   return (
