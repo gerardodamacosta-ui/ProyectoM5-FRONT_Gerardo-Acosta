@@ -4,6 +4,7 @@ import { ProtectedRoute } from '@/modules/auth/components/ProtectedRoute'
 import { LoginPage } from '@/modules/auth/pages/LoginPage'
 import { RegisterPage } from '@/modules/auth/pages/RegisterPage'
 import { CartPage } from '@/modules/cart/pages/CartPage'
+import { CheckoutPage } from '@/modules/checkout/pages/CheckoutPage'
 import { CatalogPage } from '@/modules/products/pages/CatalogPage'
 import { ProductDetailPage } from '@/modules/products/pages/ProductDetailPage'
 
@@ -38,6 +39,15 @@ export function AppRouter() {
           element={
             <ProtectedRoute allowedRoles={['customer', 'admin']}>
               <CartPage />
+            </ProtectedRoute>
+          }
+        />
+        {/* checkout: requiere sesión, cualquier rol */}
+        <Route
+          path={ROUTES.checkout}
+          element={
+            <ProtectedRoute allowedRoles={['customer', 'admin']}>
+              <CheckoutPage />
             </ProtectedRoute>
           }
         />
