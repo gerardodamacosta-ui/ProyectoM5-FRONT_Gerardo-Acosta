@@ -2,6 +2,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { ROUTES } from '@/config/constants'
 import { LoginPage } from '@/modules/auth/pages/LoginPage'
 import { RegisterPage } from '@/modules/auth/pages/RegisterPage'
+import { CatalogPage } from '@/modules/products/pages/CatalogPage'
+import { ProductDetailPage } from '@/modules/products/pages/ProductDetailPage'
 
 // placeholder temporal del home hasta que exista el catálogo real
 function HomePlaceholder() {
@@ -25,6 +27,9 @@ export function AppRouter() {
         {/* rutas públicas de auth */}
         <Route path={ROUTES.login} element={<LoginPage />} />
         <Route path={ROUTES.register} element={<RegisterPage />} />
+        {/* catálogo público: navegable sin login, ver alcance del Hito 3 */}
+        <Route path={ROUTES.catalog} element={<CatalogPage />} />
+        <Route path={ROUTES.productDetail} element={<ProductDetailPage />} />
       </Routes>
     </BrowserRouter>
   )
