@@ -23,7 +23,11 @@ service cloud.firestore {
       allow read: if true;
     }
 
-    // carts y orders: sin reglas todavía = acceso denegado por defecto
-    // se agregan cuando llegue cada módulo
+    // carrito de compras: cada usuario lee/escribe solo el suyo (doc en carts/{userId})
+    match /carts/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // orders: sin reglas todavía = acceso denegado por defecto, se agrega cuando llegue el módulo
   }
 }
