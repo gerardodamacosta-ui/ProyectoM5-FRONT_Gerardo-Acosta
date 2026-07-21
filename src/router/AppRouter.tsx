@@ -3,12 +3,16 @@ import { ROUTES } from '@/config/constants'
 import { ProtectedRoute } from '@/modules/auth/components/ProtectedRoute'
 import { LoginPage } from '@/modules/auth/pages/LoginPage'
 import { RegisterPage } from '@/modules/auth/pages/RegisterPage'
+import { AdminLayout } from '@/modules/admin/components/AdminLayout'
+import { AdminOrdersPage } from '@/modules/admin/pages/AdminOrdersPage'
+import { AdminProductsPage } from '@/modules/admin/pages/AdminProductsPage'
 import { CartPage } from '@/modules/cart/pages/CartPage'
 import { CheckoutPage } from '@/modules/checkout/pages/CheckoutPage'
 import { OrderDetailPage } from '@/modules/orders/pages/OrderDetailPage'
 import { OrdersPage } from '@/modules/orders/pages/OrdersPage'
 import { CatalogPage } from '@/modules/products/pages/CatalogPage'
 import { ProductDetailPage } from '@/modules/products/pages/ProductDetailPage'
+import { RootLayout } from '@/shared/layout/RootLayout'
 
 // placeholder temporal del home hasta que exista el catálogo real
 function HomePlaceholder() {
@@ -28,48 +32,65 @@ export function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path={ROUTES.home} element={<HomePlaceholder />} />
-        {/* rutas públicas de auth */}
+        {/* rutas de cliente: comparten RootLayout (header + CartIcon) */}
+        <Route element={<RootLayout />}>
+          <Route path={ROUTES.home} element={<HomePlaceholder />} />
+          {/* catálogo público: navegable sin login, ver alcance del Hito 3 */}
+          <Route path={ROUTES.catalog} element={<CatalogPage />} />
+          <Route path={ROUTES.productDetail} element={<ProductDetailPage />} />
+          {/* carrito: requiere sesión, cualquier rol (customer o admin) */}
+          <Route
+            path={ROUTES.cart}
+            element={
+              <ProtectedRoute allowedRoles={['customer', 'admin']}>
+                <CartPage />
+              </ProtectedRoute>
+            }
+          />
+          {/* checkout: requiere sesión, cualquier rol */}
+          <Route
+            path={ROUTES.checkout}
+            element={
+              <ProtectedRoute allowedRoles={['customer', 'admin']}>
+                <CheckoutPage />
+              </ProtectedRoute>
+            }
+          />
+          {/* historial y detalle de órdenes: requiere sesión, cualquier rol */}
+          <Route
+            path={ROUTES.orders}
+            element={
+              <ProtectedRoute allowedRoles={['customer', 'admin']}>
+                <OrdersPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.orderDetail}
+            element={
+              <ProtectedRoute allowedRoles={['customer', 'admin']}>
+                <OrderDetailPage />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
+
+        {/* auth: sin header, layout propio de cada página */}
         <Route path={ROUTES.login} element={<LoginPage />} />
         <Route path={ROUTES.register} element={<RegisterPage />} />
-        {/* catálogo público: navegable sin login, ver alcance del Hito 3 */}
-        <Route path={ROUTES.catalog} element={<CatalogPage />} />
-        <Route path={ROUTES.productDetail} element={<ProductDetailPage />} />
-        {/* carrito: requiere sesión, cualquier rol (customer o admin) */}
+
+        {/* admin: protegido por rol, layout propio */}
         <Route
-          path={ROUTES.cart}
+          path={ROUTES.admin}
           element={
-            <ProtectedRoute allowedRoles={['customer', 'admin']}>
-              <CartPage />
+            <ProtectedRoute allowedRoles={['admin']}>
+              <AdminLayout />
             </ProtectedRoute>
           }
-        />
-        {/* checkout: requiere sesión, cualquier rol */}
-        <Route
-          path={ROUTES.checkout}
-          element={
-            <ProtectedRoute allowedRoles={['customer', 'admin']}>
-              <CheckoutPage />
-            </ProtectedRoute>
-          }
-        />
-        {/* historial y detalle de órdenes: requiere sesión, cualquier rol */}
-        <Route
-          path={ROUTES.orders}
-          element={
-            <ProtectedRoute allowedRoles={['customer', 'admin']}>
-              <OrdersPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path={ROUTES.orderDetail}
-          element={
-            <ProtectedRoute allowedRoles={['customer', 'admin']}>
-              <OrderDetailPage />
-            </ProtectedRoute>
-          }
-        />
+        >
+          <Route index element={<AdminProductsPage />} />
+          <Route path={ROUTES.adminOrders} element={<AdminOrdersPage />} />
+        </Route>
       </Routes>
     </BrowserRouter>
   )
