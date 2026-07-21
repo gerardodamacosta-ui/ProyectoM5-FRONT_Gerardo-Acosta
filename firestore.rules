@@ -16,8 +16,14 @@ service cloud.firestore {
                     && request.resource.data.role == resource.data.role;
     }
 
-    // products, carts y orders: sin reglas todavía = acceso denegado por defecto
-    // se agregan cuando llegue cada módulo; las de admin van a chequear el role de
-    // users/{uid}, que gracias a la inmutabilidad de arriba es confiable
+    // catálogo de productos: lectura pública (Hito 3, catálogo navegable sin login)
+    // sin allow write: la escritura queda denegada por default hasta el CRUD admin,
+    // que va a chequear el role de users/{uid} (confiable gracias a la inmutabilidad de arriba)
+    match /products/{productId} {
+      allow read: if true;
+    }
+
+    // carts y orders: sin reglas todavía = acceso denegado por defecto
+    // se agregan cuando llegue cada módulo
   }
 }
