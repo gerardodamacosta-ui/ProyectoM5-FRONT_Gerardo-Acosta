@@ -35,6 +35,13 @@ export function RootLayout() {
                 Mis órdenes
               </Link>
             )}
+            {/* Panel Admin: mismo criterio que Mis órdenes, sumando el chequeo de rol —
+                solo el link visible, sin redirect automático post-login (fuera de alcance) */}
+            {user && user.role === 'admin' && (
+              <Link to={ROUTES.admin} className="text-gray-700 hover:text-brand-600">
+                Panel Admin
+              </Link>
+            )}
             {user ? (
               <button
                 type="button"
