@@ -285,7 +285,7 @@ bundle del cliente.
 
 ## URL de producción
 
-`[PENDIENTE — deploy en Vercel]`
+https://proyecto-m5-front-gerardo-acosta.vercel.app
 
 ## Bitácora de uso de IA
 
