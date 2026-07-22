@@ -7,6 +7,7 @@ import {
   orderBy,
   query,
   serverTimestamp,
+  updateDoc,
   where,
 } from 'firebase/firestore'
 import type { DocumentSnapshot, QueryDocumentSnapshot, Timestamp } from 'firebase/firestore'
@@ -70,5 +71,27 @@ export async function getOrder(orderId: string): Promise<Order | null> {
     return snapshot.exists() ? mapToOrder(snapshot) : null
   } catch (error) {
     handleServiceError(error, 'orders.getOrder')
+  }
+}
+
+// todas las órdenes del sistema (panel admin) — sin filtro por userId, a diferencia de
+// getUserOrders; la security rule permite este read solo si el caller es admin
+export async function getAllOrders(): Promise<Order[]> {
+  try {
+    const ordersQuery = query(collection(db, COLLECTIONS.orders), orderBy('createdAt', 'desc'))
+    const snapshot = await getDocs(ordersQuery)
+    return snapshot.docs.map(mapToOrder)
+  } catch (error) {
+    handleServiceError(error, 'orders.getAllOrders')
+  }
+}
+
+// cambia el estado de una orden (panel admin) — la security rule bloquea esto para el
+// customer, que no debe poder cambiar el estado de su propia orden
+export async function updateOrderStatus(id: string, status: OrderStatus): Promise<void> {
+  try {
+    await updateDoc(doc(db, COLLECTIONS.orders, id), { status })
+  } catch (error) {
+    handleServiceError(error, 'orders.updateOrderStatus')
   }
 }
