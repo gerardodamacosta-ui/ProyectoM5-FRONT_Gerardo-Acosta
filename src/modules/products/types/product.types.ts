@@ -15,3 +15,9 @@ export interface Product {
   // fecha de alta en ISO, mismo criterio que User (ver user.types.ts)
   createdAt: string
 }
+
+// lo que necesita createProduct — sin id (lo pone Firestore) ni createdAt (lo arma el servicio)
+export type CreateProductInput = Omit<Product, 'id' | 'createdAt'>
+
+// lo que acepta updateProduct — cualquier subconjunto de campos editables, nunca id/createdAt
+export type UpdateProductInput = Partial<Omit<Product, 'id' | 'createdAt'>>
