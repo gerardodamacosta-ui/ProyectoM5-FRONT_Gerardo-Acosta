@@ -66,7 +66,7 @@ export function AdminOrdersPage() {
                   value={order.status}
                   onChange={(e) => handleStatusChange(order, e.target.value as OrderStatus)}
                   disabled={updatingId === order.id}
-                  className="rounded-lg border border-gray-300 px-2 py-1 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="rounded-lg border border-gray-300 px-2 py-1 text-sm text-gray-900 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   {ORDER_STATUSES.map((status) => (
                     <option key={status} value={status}>
