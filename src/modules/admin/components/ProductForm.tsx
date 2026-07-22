@@ -179,7 +179,10 @@ export function ProductForm(props: ProductFormProps) {
           type="file"
           accept="image/jpeg,image/png,image/webp"
           onChange={handleFileChange}
-          className="text-sm text-gray-900"
+          // el preflight de Tailwind resetea la apariencia nativa del botón "Seleccionar
+          // archivo" (pseudo-elemento ::file-selector-button) — se lo repone a mano con el
+          // prefijo file:, mismos colores que Button variant="primary"
+          className="text-sm text-gray-900 file:mr-3 file:cursor-pointer file:rounded-md file:border-0 file:bg-brand-600 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-white hover:file:bg-brand-700"
         />
         {uploadStatus === 'uploading' && <p className="text-sm text-gray-600">Subiendo imagen...</p>}
         {uploadError && (
