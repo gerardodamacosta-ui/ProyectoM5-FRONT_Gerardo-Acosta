@@ -179,7 +179,7 @@ export function ProductForm(props: ProductFormProps) {
           type="file"
           accept="image/jpeg,image/png,image/webp"
           onChange={handleFileChange}
-          className="text-sm"
+          className="text-sm text-gray-900"
         />
         {uploadStatus === 'uploading' && <p className="text-sm text-gray-600">Subiendo imagen...</p>}
         {uploadError && (
