@@ -1,6 +1,13 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
+    // true si el usuario autenticado tiene role 'admin' en su doc de users/{uid} — evita
+    // repetir el mismo get() en products/orders (mismo patrón que ya usa el fix de Hito 2)
+    function isAdmin() {
+      return request.auth != null
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
     // perfil de usuario en users/{userId} — cada uno accede solo al suyo
     // create separado de update para que role sea INMUTABLE desde el cliente:
     // - create: solo el propio uid y siempre con role 'customer' (default de todo registro)
@@ -17,10 +24,11 @@ service cloud.firestore {
     }
 
     // catálogo de productos: lectura pública (Hito 3, catálogo navegable sin login)
-    // sin allow write: la escritura queda denegada por default hasta el CRUD admin,
-    // que va a chequear el role de users/{uid} (confiable gracias a la inmutabilidad de arriba)
     match /products/{productId} {
       allow read: if true;
+      // alta/edición/borrado del catálogo: solo admin, verificado server-side — nunca
+      // confiar en que el frontend oculte el botón (mismo criterio que el resto del proyecto)
+      allow create, update, delete: if isAdmin();
     }
 
     // carrito de compras: cada usuario lee/escribe solo el suyo (doc en carts/{userId})
@@ -29,14 +37,16 @@ service cloud.firestore {
     }
 
     // órdenes: el cliente solo crea y lee las propias — create fuerza status 'pending'
-    // (nunca se manda otro valor desde acá) y userId propio; sin update/delete todavía,
-    // se suman en el hito de admin chequeando role == 'admin'
+    // (nunca se manda otro valor desde acá) y userId propio
     match /orders/{orderId} {
       allow create: if request.auth != null
                     && request.resource.data.userId == request.auth.uid
                     && request.resource.data.status == 'pending';
+      // lectura: el dueño de la orden, o un admin (el panel de gestión lee todas)
       allow read: if request.auth != null
-                  && resource.data.userId == request.auth.uid;
+                  && (resource.data.userId == request.auth.uid || isAdmin());
+      // cambio de estado: solo admin — el customer no debe poder tocar el status de su propia orden
+      allow update: if isAdmin();
     }
   }
 }
