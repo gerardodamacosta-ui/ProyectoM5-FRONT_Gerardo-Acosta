@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ROUTES } from '@/config/constants'
+import { AdminCard } from '@/modules/admin/components/AdminCard'
 import { Modal } from '@/shared/components/ui/Modal'
 import { LoadingState } from '@/shared/components/ui/states/LoadingState'
 import { ErrorState } from '@/shared/components/ui/states/ErrorState'
@@ -50,9 +51,7 @@ export function AdminProductsPage() {
         </Link>
       </div>
 
-      {/* card blanca: mismo motivo que en las páginas de create/edit — los states/inputs
-          compartidos están pensados para fondo claro, AdminLayout es oscuro */}
-      <div className="rounded-xl bg-white p-4 sm:p-6">
+      <AdminCard>
         {loading && <LoadingState text="Cargando productos..." />}
         {error && <ErrorState message={error} />}
         {!loading && !error && (!products || products.length === 0) && (
@@ -98,7 +97,7 @@ export function AdminProductsPage() {
             ))}
           </ul>
         )}
-      </div>
+      </AdminCard>
 
       <Modal
         isOpen={productToDelete !== null}

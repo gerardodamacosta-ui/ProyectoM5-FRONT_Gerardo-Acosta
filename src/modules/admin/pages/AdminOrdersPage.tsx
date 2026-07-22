@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { ORDER_STATUSES } from '@/config/constants'
+import { AdminCard } from '@/modules/admin/components/AdminCard'
 import { LoadingState } from '@/shared/components/ui/states/LoadingState'
 import { ErrorState } from '@/shared/components/ui/states/ErrorState'
 import { EmptyState } from '@/shared/components/ui/states/EmptyState'
@@ -39,8 +40,7 @@ export function AdminOrdersPage() {
     <div className="flex flex-col gap-4">
       <h2 className="text-xl font-semibold">Órdenes</h2>
 
-      {/* card blanca: mismo motivo que en las páginas de productos admin */}
-      <div className="rounded-xl bg-white p-4 sm:p-6">
+      <AdminCard>
         {loading && <LoadingState text="Cargando órdenes..." />}
         {error && <ErrorState message={error} />}
         {updateError && <ErrorState message={updateError} />}
@@ -78,7 +78,7 @@ export function AdminOrdersPage() {
             ))}
           </ul>
         )}
-      </div>
+      </AdminCard>
     </div>
   )
 }
