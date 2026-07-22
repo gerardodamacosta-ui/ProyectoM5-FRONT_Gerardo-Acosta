@@ -17,9 +17,11 @@ type ProductFormProps =
 type UploadStatus = 'idle' | 'uploading' | 'done' | 'error'
 
 // clases compartidas por los campos que no pasan por el componente Input (textarea/select) —
-// constante local, no un componente nuevo en shared/ui: hoy son los únicos dos call sites
+// constante local, no un componente nuevo en shared/ui: hoy son los únicos dos call sites.
+// text-gray-900 explícito: sin esto heredan el text-white de AdminLayout y quedan ilegibles
+// sobre la card blanca
 const FIELD_CLASSES =
-  'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none transition-colors focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30 sm:text-base'
+  'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 outline-none transition-colors focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30 sm:text-base'
 
 // mensaje apto para UI: AppError ya viene legible desde los servicios; el resto cae al genérico
 function getErrorMessage(error: unknown): string {
