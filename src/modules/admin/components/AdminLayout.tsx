@@ -23,6 +23,9 @@ export function AdminLayout() {
         <nav className="flex items-center gap-4 text-sm">
           <Link to={ROUTES.admin}>Productos</Link>
           <Link to={ROUTES.adminOrders}>Órdenes</Link>
+          {/* navega al home de cliente sin deslogear — si estás en AdminLayout ya sos admin
+              logueado por definición de ProtectedRoute, no hace falta ninguna condición */}
+          <Link to={ROUTES.home}>Ver tienda</Link>
           <button type="button" onClick={handleLogout} className="text-red-400 hover:text-red-300">
             Salir
           </button>
