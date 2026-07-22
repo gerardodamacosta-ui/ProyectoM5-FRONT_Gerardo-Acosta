@@ -5,6 +5,8 @@ import { LoginPage } from '@/modules/auth/pages/LoginPage'
 import { RegisterPage } from '@/modules/auth/pages/RegisterPage'
 import { AdminLayout } from '@/modules/admin/components/AdminLayout'
 import { AdminOrdersPage } from '@/modules/admin/pages/AdminOrdersPage'
+import { AdminProductCreatePage } from '@/modules/admin/pages/AdminProductCreatePage'
+import { AdminProductEditPage } from '@/modules/admin/pages/AdminProductEditPage'
 import { AdminProductsPage } from '@/modules/admin/pages/AdminProductsPage'
 import { CartPage } from '@/modules/cart/pages/CartPage'
 import { CheckoutPage } from '@/modules/checkout/pages/CheckoutPage'
@@ -89,6 +91,9 @@ export function AppRouter() {
           }
         >
           <Route index element={<AdminProductsPage />} />
+          <Route path={ROUTES.adminProducts} element={<AdminProductsPage />} />
+          <Route path={ROUTES.adminProductNew} element={<AdminProductCreatePage />} />
+          <Route path={ROUTES.adminProductEdit} element={<AdminProductEditPage />} />
           <Route path={ROUTES.adminOrders} element={<AdminOrdersPage />} />
         </Route>
       </Routes>

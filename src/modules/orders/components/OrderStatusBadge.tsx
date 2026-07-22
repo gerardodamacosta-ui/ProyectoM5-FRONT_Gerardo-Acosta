@@ -9,7 +9,8 @@ const STATUS_CLASSES: Record<Order['status'], string> = {
   cancelled: 'bg-red-100 text-red-800',
 }
 
-const STATUS_LABELS: Record<Order['status'], string> = {
+// exportado: lo reusa el <select> de estado en AdminOrdersPage, no se duplica el mapeo
+export const STATUS_LABELS: Record<Order['status'], string> = {
   pending: 'Pendiente',
   processing: 'En proceso',
   completed: 'Completada',
