@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { ORDER_STATUSES } from '@/config/constants'
 import { AdminCard } from '@/modules/admin/components/AdminCard'
 import { LoadingState } from '@/shared/components/ui/states/LoadingState'
@@ -16,11 +16,24 @@ function getErrorMessage(error: unknown): string {
   return error instanceof AppError ? error.message : 'Ocurrió un error inesperado.'
 }
 
+// 'all' no es un estado real: representa "sin filtro" en la UI, mismo criterio que
+// CategoryFilterValue del catálogo (Hito 3)
+type StatusFilterValue = OrderStatus | 'all'
+
 export function AdminOrdersPage() {
   const { data: orders, loading, error, refetch } = useAllOrders()
   // id de la orden que se está actualizando ahora mismo — deshabilita solo ese select
   const [updatingId, setUpdatingId] = useState<string | null>(null)
   const [updateError, setUpdateError] = useState<string | null>(null)
+  const [statusFilter, setStatusFilter] = useState<StatusFilterValue>('all')
+
+  // filtrado 100% client-side sobre las órdenes ya traídas por getAllOrders — sin query
+  // nueva a Firestore, mismo patrón que el filtro de categoría en CatalogPage
+  const filteredOrders = useMemo(() => {
+    if (!orders) return []
+    if (statusFilter === 'all') return orders
+    return orders.filter((order) => order.status === statusFilter)
+  }, [orders, statusFilter])
 
   const handleStatusChange = async (order: Order, status: OrderStatus) => {
     setUpdatingId(order.id)
@@ -36,20 +49,46 @@ export function AdminOrdersPage() {
     }
   }
 
+  // dos mensajes de "vacío" distintos: sin órdenes en absoluto vs. filtro sin resultados
+  // (mismo criterio que CatalogPage para categoría/búsqueda)
+  const emptyMessage =
+    orders && orders.length === 0
+      ? 'Todavía no hay órdenes.'
+      : statusFilter !== 'all'
+        ? 'No encontramos órdenes con ese estado.'
+        : 'Todavía no hay órdenes.'
+
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-xl font-semibold">Órdenes</h2>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h2 className="text-xl font-semibold">Órdenes</h2>
+        {/* filtro por estado, client-side sobre las órdenes ya traídas — bg-white explícito:
+            a diferencia del select de fila (vive dentro de AdminCard), este está afuera,
+            directo sobre el fondo oscuro de AdminLayout, y el preflight deja el <select>
+            sin fondo propio (transparente), no solo sin color de texto */}
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value as StatusFilterValue)}
+          aria-label="Filtrar por estado"
+          className="rounded-lg border border-gray-300 bg-white px-2 py-1 text-sm text-gray-900 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/30"
+        >
+          <option value="all">Todos</option>
+          {ORDER_STATUSES.map((status) => (
+            <option key={status} value={status}>
+              {STATUS_LABELS[status]}
+            </option>
+          ))}
+        </select>
+      </div>
 
       <AdminCard>
         {loading && <LoadingState text="Cargando órdenes..." />}
         {error && <ErrorState message={error} />}
         {updateError && <ErrorState message={updateError} />}
-        {!loading && !error && (!orders || orders.length === 0) && (
-          <EmptyState text="Todavía no hay órdenes." />
-        )}
-        {!loading && !error && orders && orders.length > 0 && (
+        {!loading && !error && filteredOrders.length === 0 && <EmptyState text={emptyMessage} />}
+        {!loading && !error && filteredOrders.length > 0 && (
           <ul className="flex flex-col">
-            {orders.map((order) => (
+            {filteredOrders.map((order) => (
               <li
                 key={order.id}
                 className="flex flex-wrap items-center gap-3 border-b border-gray-200 py-3 last:border-b-0"
